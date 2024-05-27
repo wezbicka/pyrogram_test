@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+
+  pyrogram_bot:
+    build: .
+    container_name: pyrogram_bot
+    command: python3 -m app
+    environment:
+      - CLIENT_SESSION_PATH=/bot_init
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - pyrogram:/bot_init
+    mem_limit: 3500M
+    memswap_limit: 5500M
+    cpus: 1
+    cpu_shares: 50
+    cpuset: "0"
+    networks:
+      - Database
+    restart: always
+
+  # Database
+
+  db:
+    image: postgres:16.2
+    ports:
+      - "127.0.0.1:15432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    mem_limit: 2000M
+    memswap_limit: 3000M
+    cpus: 1
+    cpu_shares: 40
+    cpuset: "0"
+    networks:
+      - Database
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: on-failure
+
+
+networks:
+  Database:
+    driver: bridge
+
+volumes:
+  db:
+  pyrogram:
