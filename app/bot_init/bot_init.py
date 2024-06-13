@@ -18,6 +18,7 @@ api_hash = config.API_HASH
 bot_token = config.TELEGRAM_BOT_TOKEN
 client_bot = Client(
     name=f"{config.CLIENT_SESSION_PATH}/pyrogram_bot",
-    api_id=api_id, api_hash=api_hash,
+    api_id=api_id,
+    api_hash=api_hash,
     bot_token=bot_token
 )
